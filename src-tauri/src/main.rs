@@ -1,24 +1,43 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+extern crate diesel;
+extern crate dotenv;
+
+use std::path::PathBuf;
+
+use db::setup_database;
 use graphql::execute;
 use juniper::{DefaultScalarValue, ExecutionError, GraphQLError, Value, Variables};
-use tauri::Manager;
+use tauri::{AppHandle, Manager};
 
-mod graphql;
+pub mod db;
+pub mod graphql;
+
+fn get_app_data_dir(app_handle: AppHandle) -> PathBuf {
+    app_handle
+        .path_resolver()
+        .app_data_dir()
+        .expect("Unable to get app data directory")
+}
 
 #[tauri::command]
 fn graphql(
+    app_handle: AppHandle,
     query: &str,
     operation_name: Option<&str>,
     variables: Option<Variables>,
 ) -> Result<(Value, Vec<ExecutionError<DefaultScalarValue>>), GraphQLError> {
-    execute(query, operation_name, variables)
+    let data_dir = get_app_data_dir(app_handle);
+    execute(query, operation_name, variables, data_dir)
 }
 
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            let data_dir = get_app_data_dir(app.handle());
+            setup_database(data_dir);
+
             #[cfg(debug_assertions)]
             app.get_window("main").unwrap().open_devtools();
             Ok(())

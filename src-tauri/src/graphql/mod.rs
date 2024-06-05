@@ -1,7 +1,10 @@
 mod context;
 mod query;
 
+use std::path::PathBuf;
+
 use context::Context;
+
 use juniper::{
     DefaultScalarValue, EmptyMutation, EmptySubscription, ExecutionError, GraphQLError, RootNode,
     Value, Variables,
@@ -16,8 +19,10 @@ pub(crate) fn execute(
     query: &str,
     operation_name: Option<&str>,
     variables: Option<Variables>,
+    data_dir: PathBuf,
 ) -> Result<(Value, Vec<ExecutionError<DefaultScalarValue>>), GraphQLError> {
-    let ctx = Context {};
+    let ctx = Context::from_data_dir(data_dir);
+
     let variables = variables.unwrap_or(Variables::new());
 
     juniper::execute_sync(
