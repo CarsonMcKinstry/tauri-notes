@@ -1,9 +1,7 @@
 use juniper::{graphql_object, FieldResult};
 
-use super::{
-    context::Context,
-    models::note::{Note, NoteCreateInput},
-};
+use super::context::Context;
+use crate::models::note::*;
 
 pub(super) struct Mutation;
 

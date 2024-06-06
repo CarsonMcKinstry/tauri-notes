@@ -3,12 +3,6 @@ schema {
   mutation: Mutation
 }
 
-enum Episode {
-  NEW_HOPE
-  EMPIRE
-  JEDI
-}
-
 input NoteCreateInput {
   title: String!
   content: String
@@ -22,14 +16,6 @@ input NoteCreateInput {
   [1]: https://docs.rs/chrono/latest/chrono/naive/struct.NaiveDateTime.html
 """
 scalar LocalDateTime
-
-"A humanoid creature in the Star Wars universe"
-type Human {
-  id: String!
-  name: String!
-  appearsIn: [Episode!]!
-  homePlanet: String!
-}
 
 type Mutation {
   createNote(data: NoteCreateInput!): Note!
@@ -46,6 +32,5 @@ type Note {
 
 type Query {
   apiVersion: String!
-  human(humanId: String!): Human!
   notes: [Note!]!
 }

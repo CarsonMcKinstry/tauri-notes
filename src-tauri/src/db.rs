@@ -6,8 +6,6 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenv::dotenv;
 use std::{env, fs::create_dir_all, path::PathBuf};
 
-pub mod schema;
-
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");

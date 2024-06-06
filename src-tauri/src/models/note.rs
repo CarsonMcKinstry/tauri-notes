@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use juniper::{GraphQLInputObject, GraphQLObject};
 use uuid::Uuid;
 
-use crate::db::schema::notes;
+use crate::schema::notes;
 
 #[derive(GraphQLObject, Queryable, Insertable, Clone)]
 #[diesel(table_name = notes)]
@@ -39,7 +39,7 @@ impl Note {
     }
 
     pub fn get_notes(connection: &mut SqliteConnection) -> QueryResult<Vec<Note>> {
-        use crate::db::schema::notes::dsl::*;
+        use crate::schema::notes::dsl::*;
 
         notes
             .filter(active.eq(true))
@@ -48,7 +48,7 @@ impl Note {
     }
 
     pub fn get_note(note_id: String, connection: &mut SqliteConnection) -> QueryResult<Note> {
-        use crate::db::schema::notes::dsl::*;
+        use crate::schema::notes::dsl::*;
 
         notes.find(note_id).get_result(connection)
     }

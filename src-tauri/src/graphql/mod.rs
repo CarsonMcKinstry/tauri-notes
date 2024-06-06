@@ -1,15 +1,14 @@
-mod context;
-mod models;
-mod mutation;
-mod query;
+pub(crate) mod context;
+pub(crate) mod mutation;
+pub(crate) mod query;
 
 use std::path::PathBuf;
-
-use context::Context;
 
 use juniper::{
     DefaultScalarValue, EmptySubscription, ExecutionError, GraphQLError, Value, Variables,
 };
+
+use context::Context;
 use mutation::Mutation;
 use query::Query;
 
@@ -17,11 +16,11 @@ use query::Query;
 type Schema = juniper::RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
 
 fn create_schema() -> Schema {
-    Schema::new(Query, Mutation, EmptySubscription::new())
+    Schema::new(Query {}, Mutation {}, EmptySubscription::new())
 }
 
 #[allow(dead_code)]
-pub(crate) fn execute(
+pub fn execute(
     query: &str,
     operation_name: Option<&str>,
     variables: Option<Variables>,

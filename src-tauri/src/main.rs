@@ -6,13 +6,10 @@ extern crate dotenv;
 
 use std::path::PathBuf;
 
-use db::setup_database;
-use graphql::execute;
 use juniper::{DefaultScalarValue, ExecutionError, GraphQLError, Value, Variables};
 use tauri::{AppHandle, Manager};
-
-pub mod db;
-pub mod graphql;
+use tauri_notes::db::setup_database;
+use tauri_notes::graphql::execute;
 
 fn get_app_data_dir(app_handle: AppHandle) -> PathBuf {
     app_handle

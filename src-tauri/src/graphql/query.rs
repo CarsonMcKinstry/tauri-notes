@@ -1,9 +1,7 @@
 use juniper::{graphql_object, FieldResult};
 
-use super::{
-    context::Context,
-    models::{note::Note, Human},
-};
+use super::context::Context;
+use crate::models::note::*;
 
 pub(super) struct Query;
 
@@ -12,15 +10,6 @@ pub(super) struct Query;
 impl Query {
     fn api_version() -> &'static str {
         "1.0"
-    }
-
-    fn human(human_id: String) -> FieldResult<Human> {
-        Ok(Human {
-            id: human_id,
-            name: "Luke Skywalker".into(),
-            appears_in: Vec::new(),
-            home_planet: "Tatoine".into(),
-        })
     }
 
     fn notes(context: &Context) -> FieldResult<Vec<Note>> {
