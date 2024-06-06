@@ -1,4 +1,6 @@
 mod context;
+mod models;
+mod mutation;
 mod query;
 
 use std::path::PathBuf;
@@ -6,13 +8,17 @@ use std::path::PathBuf;
 use context::Context;
 
 use juniper::{
-    DefaultScalarValue, EmptyMutation, EmptySubscription, ExecutionError, GraphQLError, RootNode,
-    Value, Variables,
+    DefaultScalarValue, EmptySubscription, ExecutionError, GraphQLError, Value, Variables,
 };
+use mutation::Mutation;
 use query::Query;
 
 #[allow(dead_code)]
-type Schema = juniper::RootNode<'static, Query, EmptyMutation<Context>, EmptySubscription<Context>>;
+type Schema = juniper::RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
+
+fn create_schema() -> Schema {
+    Schema::new(Query, Mutation, EmptySubscription::new())
+}
 
 #[allow(dead_code)]
 pub(crate) fn execute(
@@ -25,22 +31,12 @@ pub(crate) fn execute(
 
     let variables = variables.unwrap_or(Variables::new());
 
-    juniper::execute_sync(
-        query,
-        operation_name,
-        &Schema::new(Query, EmptyMutation::new(), EmptySubscription::new()),
-        &variables,
-        &ctx,
-    )
+    juniper::execute_sync(query, operation_name, &create_schema(), &variables, &ctx)
 }
 
 #[allow(dead_code)]
 pub fn get_sdl() -> String {
-    let schema = RootNode::new(
-        Query,
-        EmptyMutation::<()>::new(),
-        EmptySubscription::<()>::new(),
-    );
+    let schema = create_schema();
 
     schema.as_sdl()
 }

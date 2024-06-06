@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "query MyApp {\n  apiVersion\n}": types.MyAppDocument,
+    "query MyApp {\n  apiVersion\n}\n\nquery GetNotes {\n  notes {\n    id\n    title\n    content\n    updatedAt\n    content\n    active\n  }\n}\n\nmutation CreateNote($title: String!) {\n  createNote(data: {title: $title}) {\n    id\n    title\n    content\n  }\n}": types.MyAppDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "query MyApp {\n  apiVersion\n}"): (typeof documents)["query MyApp {\n  apiVersion\n}"];
+export function gql(source: "query MyApp {\n  apiVersion\n}\n\nquery GetNotes {\n  notes {\n    id\n    title\n    content\n    updatedAt\n    content\n    active\n  }\n}\n\nmutation CreateNote($title: String!) {\n  createNote(data: {title: $title}) {\n    id\n    title\n    content\n  }\n}"): (typeof documents)["query MyApp {\n  apiVersion\n}\n\nquery GetNotes {\n  notes {\n    id\n    title\n    content\n    updatedAt\n    content\n    active\n  }\n}\n\nmutation CreateNote($title: String!) {\n  createNote(data: {title: $title}) {\n    id\n    title\n    content\n  }\n}"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

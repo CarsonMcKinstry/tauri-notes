@@ -1,3 +1,22 @@
 query MyApp {
     apiVersion
 }
+
+query GetNotes {
+    notes {
+        id
+        title
+        content
+        updatedAt
+        content
+        active
+    }
+}
+
+mutation CreateNote($title: String!) {
+    createNote(data: { title: $title }) {
+        id
+        title
+        content
+    }
+}

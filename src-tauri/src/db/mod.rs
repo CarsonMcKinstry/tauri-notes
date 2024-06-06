@@ -6,8 +6,7 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenv::dotenv;
 use std::{env, fs::create_dir_all, path::PathBuf};
 
-mod models;
-mod schema;
+pub mod schema;
 
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -23,9 +22,17 @@ fn run_migrations(pool: DbPool) {
 fn get_database_path(data_dir: PathBuf) -> String {
     dotenv().ok();
 
+    let dev_mode = env::var("NODE_ENV")
+        .map(|mode| mode == "dev")
+        .unwrap_or(false);
+
     let database_path = env::var("DATABASE_URL").expect("DATBASE_URL must be set");
 
-    data_dir.join(database_path).to_string_lossy().to_string()
+    if dev_mode {
+        database_path
+    } else {
+        data_dir.join(database_path).to_string_lossy().to_string()
+    }
 }
 
 pub fn establish_connection(data_dir: PathBuf) -> DbPool {

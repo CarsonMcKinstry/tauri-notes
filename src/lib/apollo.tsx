@@ -38,7 +38,7 @@ const client = new ApolloClient({
     link: InvokeLink,
     defaultOptions: {
         query: {
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
         },
     },
 });

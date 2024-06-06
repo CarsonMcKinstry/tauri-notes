@@ -4,7 +4,7 @@ use crate::db::{establish_connection, DbPool};
 
 pub(super) struct Context {
     #[allow(dead_code)]
-    pool: DbPool,
+    pub pool: DbPool,
 }
 
 impl juniper::Context for Context {}

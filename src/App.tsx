@@ -1,13 +1,24 @@
-import { useQuery } from '@apollo/client';
-import { MyAppDocument } from '@gql/graphql';
+import { useMutation, useQuery } from '@apollo/client';
+import { CreateNoteDocument, GetNotesDocument } from '@gql/graphql';
 import './App.css';
 
 function App() {
-    const { data } = useQuery(MyAppDocument);
-    console.log(data?.apiVersion);
+    const { data } = useQuery(GetNotesDocument);
+    const [createNote] = useMutation(CreateNoteDocument);
+    console.log(data);
+    const handleClick = async () => {
+        const r = await createNote({
+            variables: {
+                title: 'my note',
+            },
+        });
+
+        console.log(r);
+    };
+
     return (
-        <div>
-            <h1>API Version: {data?.apiVersion}</h1>
+        <div className="pt-6">
+            <button onClick={handleClick}>Click Me</button>
         </div>
     );
 }

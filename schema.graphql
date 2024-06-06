@@ -1,7 +1,51 @@
 schema {
   query: Query
+  mutation: Mutation
+}
+
+enum Episode {
+  NEW_HOPE
+  EMPIRE
+  JEDI
+}
+
+input NoteCreateInput {
+  title: String!
+  content: String
+}
+
+"""
+  Combined date and time (without time zone) in `yyyy-MM-dd HH:mm:ss` format.
+
+  See also [`chrono::NaiveDateTime`][1] for details.
+
+  [1]: https://docs.rs/chrono/latest/chrono/naive/struct.NaiveDateTime.html
+"""
+scalar LocalDateTime
+
+"A humanoid creature in the Star Wars universe"
+type Human {
+  id: String!
+  name: String!
+  appearsIn: [Episode!]!
+  homePlanet: String!
+}
+
+type Mutation {
+  createNote(data: NoteCreateInput!): Note!
+}
+
+type Note {
+  id: String!
+  title: String!
+  content: String!
+  createdAt: LocalDateTime!
+  updatedAt: LocalDateTime!
+  active: Boolean!
 }
 
 type Query {
   apiVersion: String!
+  human(humanId: String!): Human!
+  notes: [Note!]!
 }
