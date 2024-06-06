@@ -24,12 +24,16 @@ fn get_database_path(data_dir: PathBuf) -> String {
         .map(|mode| mode == "dev")
         .unwrap_or(false);
 
-    let database_path = env::var("DATABASE_URL").expect("DATBASE_URL must be set");
+    let database_path = env::var("DATABASE_URL").unwrap_or("db.sqlite".into());
 
     if dev_mode {
         database_path
     } else {
-        data_dir.join(database_path).to_string_lossy().to_string()
+        data_dir
+            .join("databases")
+            .join(database_path)
+            .to_string_lossy()
+            .to_string()
     }
 }
 
