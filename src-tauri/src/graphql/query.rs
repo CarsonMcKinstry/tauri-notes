@@ -3,7 +3,7 @@ use juniper::{graphql_object, FieldResult};
 use super::context::Context;
 use crate::models::note::*;
 
-pub(super) struct Query;
+pub struct Query;
 
 #[graphql_object]
 #[graphql(context = Context)]
@@ -12,10 +12,18 @@ impl Query {
         "1.0"
     }
 
-    fn notes(context: &Context) -> FieldResult<Vec<Note>> {
+    fn notes(context: &Context) -> FieldResult<NotesResults> {
         let connection = &mut context.pool.get()?;
 
         let results = Note::get_notes(connection)?;
+
+        Ok(results)
+    }
+
+    fn note(note_id: String, context: &Context) -> FieldResult<Note> {
+        let connection = &mut context.pool.get()?;
+
+        let results = Note::get_note(note_id, connection)?;
 
         Ok(results)
     }

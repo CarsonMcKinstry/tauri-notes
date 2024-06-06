@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use crate::db::{establish_connection, DbPool};
 
-pub(super) struct Context {
+pub struct Context {
     #[allow(dead_code)]
     pub pool: DbPool,
 }

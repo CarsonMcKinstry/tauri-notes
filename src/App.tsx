@@ -5,15 +5,13 @@ import './App.css';
 function App() {
     const { data } = useQuery(GetNotesDocument);
     const [createNote] = useMutation(CreateNoteDocument);
-    console.log(data);
+
     const handleClick = async () => {
         const r = await createNote({
             variables: {
-                title: 'my note',
+                title: 'another note',
             },
         });
-
-        console.log(r);
     };
 
     return (

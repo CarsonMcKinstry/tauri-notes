@@ -16,7 +16,9 @@ const InvokeLink = new ApolloLink(
                 variables,
                 operationName,
             })
-                .then(([data]: any) => {
+                .then(([data, ...rest]: any) => {
+                    console.log(rest);
+                    console.log(data);
                     observer.next({ data });
                     observer.complete();
                 })
@@ -38,6 +40,9 @@ const client = new ApolloClient({
     link: InvokeLink,
     defaultOptions: {
         query: {
+            fetchPolicy: 'network-only',
+        },
+        watchQuery: {
             fetchPolicy: 'network-only',
         },
     },

@@ -8,14 +8,14 @@ use juniper::{
     DefaultScalarValue, EmptySubscription, ExecutionError, GraphQLError, Value, Variables,
 };
 
-use context::Context;
-use mutation::Mutation;
-use query::Query;
+pub use context::Context;
+pub use mutation::Mutation;
+pub use query::Query;
 
 #[allow(dead_code)]
-type Schema = juniper::RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
+pub type Schema = juniper::RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
 
-fn create_schema() -> Schema {
+pub fn create_schema() -> Schema {
     Schema::new(Query {}, Mutation {}, EmptySubscription::new())
 }
 

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "NODE_ENV=dev && tauri",
+    "dev:graphql": "cd src-tauri && cargo run --bin run_dev_server && cd ..",
     "generate:schema": "cd src-tauri && cargo run --bin generate_sdl && cd ..",
     "codegen": "graphql-codegen-esm --config codegen.ts"
   },
