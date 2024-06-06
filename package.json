@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "NODE_ENV=dev && tauri",
+    "build:mac": "tsx prebuild.ts && yarn tauri build --target universal-apple-darwin && tsx postbuild.ts",
     "dev:graphql": "cd src-tauri && cargo run --bin run_dev_server && cd ..",
     "generate:schema": "cd src-tauri && cargo run --bin generate_sdl && cd ..",
     "codegen": "graphql-codegen-esm --config codegen.ts"
@@ -40,6 +41,7 @@
     "postcss": "^8.4.38",
     "prettier": "^3.3.0",
     "tailwindcss": "^3.4.3",
+    "tsx": "^4.12.0",
     "typescript": "^5.0.2",
     "vite": "^5.0.0"
   }

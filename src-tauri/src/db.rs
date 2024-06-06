@@ -40,7 +40,7 @@ fn get_database_path(data_dir: PathBuf) -> String {
 pub fn establish_connection(data_dir: PathBuf) -> DbPool {
     let app_dir_path = data_dir.clone();
 
-    create_dir_all(app_dir_path).expect("Failed creating app data directory!");
+    create_dir_all(app_dir_path.join("databases")).expect("Failed creating app data directory!");
 
     let db_path = get_database_path(data_dir);
 

@@ -27,6 +27,7 @@ diesel_migrations = { version = "2.2.0" }
 uuid = { version = "1.8.0", features = ["v4"] }
 rocket = "0.5.1"
 juniper_rocket = "0.9.0"
+fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

@@ -30,6 +30,7 @@ fn graphql(
 }
 
 fn main() {
+    let _ = fix_path_env::fix();
     tauri::Builder::default()
         .setup(|app| {
             let data_dir = get_app_data_dir(app.handle());
