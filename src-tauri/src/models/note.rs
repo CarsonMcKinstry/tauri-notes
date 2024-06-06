@@ -1,9 +1,9 @@
 use chrono::{NaiveDateTime, Utc};
 use diesel::{prelude::*, update};
-use juniper::{graphql_object, FieldResult, GraphQLInputObject};
+use juniper::{graphql_object, FieldError, FieldResult, GraphQLInputObject, Value};
 use uuid::Uuid;
 
-use crate::schema::notes::{self};
+use crate::schema::notes;
 
 #[derive(Queryable, Selectable, Insertable, Clone)]
 #[diesel(table_name = notes)]
@@ -23,7 +23,6 @@ pub struct NoteCreateInput {
 }
 
 #[derive(GraphQLInputObject)]
-
 pub struct NoteEditInput {
     title: Option<String>,
     content: Option<String>,
@@ -39,13 +38,10 @@ pub struct NoteChangeSet {
 
 impl NoteEditInput {
     fn to_change_set(self) -> NoteChangeSet {
-        let now_utc = Utc::now();
-        let now_naive = now_utc.naive_utc();
-
         NoteChangeSet {
-            updated_at: Some(now_naive),
             title: self.title,
             content: self.content,
+            updated_at: Some(Utc::now().naive_utc()),
         }
     }
 }
@@ -62,9 +58,9 @@ impl NotesResults {
     }
 
     fn count(&self) -> FieldResult<i32> {
-        self.count.try_into().map_err(|_| {
-            juniper::FieldError::new("User count exceeds i32 range", juniper::Value::null())
-        })
+        self.count
+            .try_into()
+            .map_err(|_| FieldError::new("User count exceeds i32 range", Value::null()))
     }
 }
 
@@ -101,13 +97,12 @@ impl Note {
 
 impl Note {
     fn from_input(input: &NoteCreateInput) -> Self {
-        let now_utc = Utc::now();
-        let now_naive: NaiveDateTime = now_utc.naive_utc();
+        let now_naive = Utc::now().naive_utc();
 
         Note {
             id: Uuid::new_v4().to_string(),
             title: input.title.clone(),
-            content: input.content.clone().unwrap_or("".into()),
+            content: input.content.clone().unwrap_or_default(),
             created_at: now_naive,
             updated_at: now_naive,
             active: true,
@@ -117,11 +112,10 @@ impl Note {
     pub fn get_notes(connection: &mut SqliteConnection) -> QueryResult<NotesResults> {
         use crate::schema::notes::dsl::*;
 
-        let count: i64 = notes
+        let count = notes
             .filter(active.eq(true))
             .count()
             .get_result(connection)?;
-
         let results = notes
             .filter(active.eq(true))
             .order(updated_at.desc())
@@ -132,7 +126,6 @@ impl Note {
 
     pub fn get_note(note_id: String, connection: &mut SqliteConnection) -> QueryResult<Note> {
         use crate::schema::notes::dsl::*;
-
         notes.find(note_id).get_result(connection)
     }
 
