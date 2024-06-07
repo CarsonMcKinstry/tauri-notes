@@ -2,7 +2,10 @@ use std::path::PathBuf;
 
 use rocket::{response::content::RawHtml, routes, State};
 
-use tauri_notes::graphql::{create_schema, Context, Schema};
+use tauri_notes::{
+    db::setup_database,
+    graphql::{create_schema, Context, Schema},
+};
 
 #[rocket::get("/")]
 async fn homepage() -> RawHtml<&'static str> {
@@ -24,6 +27,14 @@ fn playground() -> RawHtml<String> {
     juniper_rocket::playground_source("/graphql", None)
 }
 
+fn get_path() -> PathBuf {
+    std::env::current_dir()
+        .unwrap()
+        .join("..")
+        .canonicalize()
+        .unwrap()
+}
+
 // GET request accepts query parameters like these:
 // ?query=<urlencoded-graphql-query-string>
 // &operationName=<optional-name>
@@ -34,7 +45,7 @@ async fn get_graphql(
     request: juniper_rocket::GraphQLRequest,
     schema: &State<Schema>,
 ) -> juniper_rocket::GraphQLResponse {
-    let path = PathBuf::new().join("");
+    let path = get_path();
     request.execute(schema, &Context::from_data_dir(path)).await
 }
 
@@ -43,12 +54,20 @@ async fn post_graphql(
     request: juniper_rocket::GraphQLRequest,
     schema: &State<Schema>,
 ) -> juniper_rocket::GraphQLResponse {
-    let path = PathBuf::new().join("");
+    let path = get_path();
     request.execute(schema, &Context::from_data_dir(path)).await
 }
 
 #[rocket::main]
 async fn main() {
+    setup_database(
+        std::env::current_dir()
+            .unwrap()
+            .join("..")
+            .canonicalize()
+            .unwrap(),
+    );
+
     _ = rocket::build()
         .manage(create_schema())
         .mount(

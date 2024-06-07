@@ -8,9 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:dev": "NODE_ENV=dev && tauri",
-    "build:mac": "tsx prebuild.ts && yarn tauri build --target universal-apple-darwin && tsx postbuild.ts",
-    "dev:graphql": "cd src-tauri && cargo run --bin run_dev_server && cd ..",
+    "build:mac": "yarn tauri build --target universal-apple-darwin",
+    "dev:graphql": "cd dev-tools && cargo run --bin dev_server && cd ..",
     "generate:schema": "cd src-tauri && cargo run --bin generate_sdl && cd ..",
     "codegen": "graphql-codegen-esm --config codegen.ts"
   },

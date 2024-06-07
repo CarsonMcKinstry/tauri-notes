@@ -4,12 +4,14 @@ query MyApp {
 
 query GetNotes {
     notes {
-        id
-        title
-        content
-        updatedAt
-        content
-        active
+        results {
+            id
+            title
+            content
+            updatedAt
+            content
+            active
+        }
     }
 }
 

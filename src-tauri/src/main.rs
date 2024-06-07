@@ -4,18 +4,34 @@
 extern crate diesel;
 extern crate dotenv;
 
+use std::env;
 use std::path::PathBuf;
 
+use dotenv::dotenv;
 use juniper::{DefaultScalarValue, ExecutionError, GraphQLError, Value, Variables};
 use tauri::{AppHandle, Manager};
 use tauri_notes::db::setup_database;
 use tauri_notes::graphql::execute;
 
 fn get_app_data_dir(app_handle: AppHandle) -> PathBuf {
-    app_handle
-        .path_resolver()
-        .app_data_dir()
-        .expect("Unable to get app data directory")
+    dotenv().ok();
+
+    let dev_mode = env::var("NODE_ENV")
+        .map(|mode| mode == "development")
+        .unwrap_or(false);
+
+    if dev_mode {
+        std::env::current_dir()
+            .unwrap()
+            .join("..")
+            .canonicalize()
+            .unwrap()
+    } else {
+        app_handle
+            .path_resolver()
+            .app_data_dir()
+            .expect("Unable to get app data directory")
+    }
 }
 
 #[tauri::command]

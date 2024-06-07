@@ -8,6 +8,11 @@ input NoteCreateInput {
   content: String
 }
 
+input NoteEditInput {
+  title: String
+  content: String
+}
+
 """
   Combined date and time (without time zone) in `yyyy-MM-dd HH:mm:ss` format.
 
@@ -19,6 +24,8 @@ scalar LocalDateTime
 
 type Mutation {
   createNote(data: NoteCreateInput!): Note!
+  editNote(noteId: String!, data: NoteEditInput!): Note!
+  deleteNote(noteId: String!): Boolean!
 }
 
 type Note {
@@ -28,9 +35,16 @@ type Note {
   createdAt: LocalDateTime!
   updatedAt: LocalDateTime!
   active: Boolean!
+  summary: String!
+}
+
+type NotesResults {
+  results: [Note!]!
+  count: Int!
 }
 
 type Query {
   apiVersion: String!
-  notes: [Note!]!
+  notes: NotesResults!
+  note(noteId: String!): Note!
 }

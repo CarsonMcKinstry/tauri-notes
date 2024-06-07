@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 db.sqlite
+target
+dev-tools/target

@@ -20,21 +20,13 @@ fn run_migrations(pool: DbPool) {
 fn get_database_path(data_dir: PathBuf) -> String {
     dotenv().ok();
 
-    let dev_mode = env::var("NODE_ENV")
-        .map(|mode| mode == "dev")
-        .unwrap_or(false);
-
     let database_path = env::var("DATABASE_URL").unwrap_or("db.sqlite".into());
 
-    if dev_mode {
-        database_path
-    } else {
-        data_dir
-            .join("databases")
-            .join(database_path)
-            .to_string_lossy()
-            .to_string()
-    }
+    data_dir
+        .join("databases")
+        .join(database_path)
+        .to_string_lossy()
+        .to_string()
 }
 
 pub fn establish_connection(data_dir: PathBuf) -> DbPool {
@@ -51,10 +43,5 @@ pub fn establish_connection(data_dir: PathBuf) -> DbPool {
 
 pub fn setup_database(data_dir: PathBuf) {
     let pool = establish_connection(data_dir);
-
-    println!("Running SQL migrations");
-
     run_migrations(pool);
-
-    println!("Finished running SQL migrations");
 }
